@@ -1,4 +1,4 @@
-name: DevOps CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Login to Docker Hub
@@ -24,16 +24,3 @@ jobs:
       - name: Push Docker image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
-
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v4
-
-      - name: Setup kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
-          export KUBECONFIG=$(pwd)/kubeconfig
-
-      - name: Update Kubernetes deployment
-        run: |
-          kubectl set image deployment/devops-app devops-app=${{ secrets.DOCKER_USERNAME }}/devops-app:latest
-          kubectl rollout restart deployment devops-app
