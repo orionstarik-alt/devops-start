@@ -1,9 +1,7 @@
-FROM ubuntu:22.04
+FROM python:3.9
 
 WORKDIR /app
 
-COPY script.sh .
+RUN echo 'from http.server import SimpleHTTPRequestHandler, HTTPServer\nHTTPServer(("0.0.0.0", 80), SimpleHTTPRequestHandler).serve_forever()' > app.py
 
-RUN chmod +x script.sh
-
-CMD ["./script.sh"]
+CMD ["python", "app.py"]
