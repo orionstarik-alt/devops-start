@@ -1,4 +1,4 @@
-name: Run Script
+name: Docker CI
 
 on:
   push:
@@ -6,15 +6,15 @@ on:
       - main
 
 jobs:
-  run-script:
+  docker-job:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Make script executable
-        run: chmod +x script.sh
+      - name: Build Docker image
+        run: docker build -t devops-app .
 
-      - name: Run script
-        run: ./script.sh
+      - name: Run container
+        run: docker run devops-app
